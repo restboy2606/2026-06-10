@@ -63,7 +63,11 @@ export default function Community() {
     setErr('')
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
-      options: { redirectTo: window.location.href },
+      options: {
+        redirectTo: window.location.href,
+        // 카카오 앱에 email 권한 없음(비즈 인증 필요) → 기본 스코프에서 account_email 제외
+        scopes: 'profile_nickname profile_image',
+      },
     })
     if (error) setErr(error.message)
   }
