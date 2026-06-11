@@ -45,7 +45,7 @@ export default function Home() {
             <div className="mt-10 flex gap-8 text-sm">
               <div>
                 <div className="font-pixel text-3xl font-extrabold text-amber">
-                  {(news.newest || []).length + (news.top || []).length}
+                  {(news.gameNews || []).length + (news.newest || []).length + (news.top || []).length}
                 </div>
                 <div className="text-navy-200">오늘의 수집 기사</div>
               </div>
@@ -180,16 +180,16 @@ export default function Home() {
         </section>
       )}
 
-      {/* CTA — 길드 가입 */}
+      {/* CTA — 회원 가입 */}
       <section className="container-x pb-20">
         <div className="hero-gradient flex flex-col items-center gap-5 rounded-3xl px-6 py-14 text-center text-white">
-          <h2 className="text-2xl font-extrabold md:text-3xl">길드에 합류하세요</h2>
+          <h2 className="text-2xl font-extrabold md:text-3xl">독자가 되어주세요</h2>
           <p className="max-w-xl text-navy-100">
-            회원이 되면 기사에 반응과 댓글을 남기고, 길드 게시판에서 제보·토론에 참여할 수 있습니다.
+            회원이 되면 기사에 반응과 댓글을 남기고, 자유게시판에서 제보·토론에 참여할 수 있습니다.
             카카오 로그인으로 3초면 충분해요.
           </p>
           <Link to="/community" className="btn-primary !bg-amber !text-navy-900 hover:!bg-amber-300">
-            길드 게시판 가기 ⚔️
+            자유게시판 가기 ⚔️
           </Link>
         </div>
       </section>

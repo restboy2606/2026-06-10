@@ -57,7 +57,7 @@ export const company = {
 export const sections = [
   { label: '신작 데스크', to: '/news', desc: 'itch.io 픽셀 신작을 매일 자동 수집' },
   { label: '에디토리얼', to: '/articles', desc: '데브로그·비하인드·칼럼 — 직접 쓰는 기사' },
-  { label: '길드 게시판', to: '/community', desc: '독자 커뮤니티 — 제보·토론·Q&A' },
+  { label: '자유게시판', to: '/community', desc: '독자 커뮤니티 — 제보·토론·Q&A' },
 ]
 
 // 웹진 강점 (홈 소개 섹션)
@@ -79,7 +79,7 @@ export const features = [
   },
   {
     icon: '⚔️',
-    title: '길드 커뮤니티',
-    desc: '회원이 되면 기사에 반응·댓글을 남기고, 길드 게시판에서 제보하고 토론할 수 있습니다.',
+    title: '독자 커뮤니티',
+    desc: '회원이 되면 기사에 반응·댓글을 남기고, 자유게시판에서 제보하고 토론할 수 있습니다.',
   },
 ]

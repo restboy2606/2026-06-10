@@ -165,7 +165,7 @@ export default function ArticleEngagement({ articleId }) {
         </div>
       ) : (
         <p className="text-sm text-navy-400">
-          댓글은 길드 회원만 쓸 수 있어요 — 우측 상단에서 로그인하세요.
+          댓글은 회원만 쓸 수 있어요 — 우측 상단에서 로그인하세요.
         </p>
       )}
     </div>

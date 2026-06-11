@@ -157,7 +157,7 @@ function AuthBox() {
         {profile?.nickname || '...'}
         {isAdmin && (
           <em className="font-pixel rounded border border-royal px-1 py-0.5 text-[9px] not-italic text-royal dark:border-sky dark:text-sky">
-            GM
+            ADMIN
           </em>
         )}
       </span>

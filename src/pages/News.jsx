@@ -5,6 +5,7 @@ import news from '../data/news.json'
 // 어그리게이터 방식: 썸네일+제목+요약+원문 링크 (전문 복제 없음)
 
 const TABS = [
+  { key: 'gameNews', label: '📰 게임 뉴스' },
   { key: 'newest', label: '🆕 따끈한 신작' },
   { key: 'top', label: '🏆 명예의 전당' },
 ]
@@ -17,9 +18,10 @@ const fmtDate = (s) => {
 }
 
 export default function News() {
-  const [tab, setTab] = useState('newest')
+  const [tab, setTab] = useState('gameNews')
   const items = news[tab] || []
   const fetched = fmtDate(news.fetchedAt)
+  const isNewsTab = tab === 'gameNews'
 
   return (
     <div>
@@ -30,7 +32,7 @@ export default function News() {
             신작 데스크
           </h1>
           <p className="mt-3 text-navy-600 dark:text-navy-300">
-            itch.io의 픽셀아트 신작·인기작을 데스크 봇이 매일 수집합니다.
+            게임 뉴스와 픽셀 신작·인기작을 데스크 봇이 매일 수집합니다.
             {fetched && <span className="ml-2 text-sm text-navy-400">최근 수집: {fetched}</span>}
           </p>
         </div>
@@ -70,20 +72,20 @@ export default function News() {
                 className="surface group flex flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-glow"
               >
                 {g.image && (
-                  <div className="aspect-[315/250] overflow-hidden bg-navy-100 dark:bg-navy-800">
+                  <div className={`${isNewsTab ? 'aspect-video' : 'aspect-[315/250]'} overflow-hidden bg-navy-100 dark:bg-navy-800`}>
                     <img
                       src={g.image}
                       alt={g.title}
                       loading="lazy"
                       className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                      style={{ imageRendering: 'pixelated' }}
+                      style={isNewsTab ? undefined : { imageRendering: 'pixelated' }}
                     />
                   </div>
                 )}
                 <div className="flex flex-1 flex-col p-5">
                   <div className="mb-2 flex items-center justify-between gap-2">
                     <span className="chip bg-royal/15 text-royal">
-                      {g.price === '$0.00' ? 'FREE' : g.price}
+                      {isNewsTab ? g.source : g.price === '$0.00' ? 'FREE' : g.price}
                     </span>
                     <span className="text-xs text-navy-400">{fmtDate(g.pubDate)}</span>
                   </div>
@@ -96,7 +98,7 @@ export default function News() {
                     </p>
                   )}
                   <span className="mt-4 text-xs font-bold text-royal dark:text-sky">
-                    itch.io에서 보기 ↗
+                    {isNewsTab ? '기사 원문 보기 ↗' : 'itch.io에서 보기 ↗'}
                   </span>
                 </div>
               </a>
@@ -105,7 +107,9 @@ export default function News() {
         )}
 
         <p className="mt-10 text-center text-xs text-navy-400">
-          출처: itch.io 공개 RSS · 썸네일과 소개문의 저작권은 각 개발자에게 있습니다.
+          {isNewsTab
+            ? '출처: 루리웹·게임메카 공개 RSS — 제목·요약·썸네일만 표시하며 본문은 원문 링크에서 읽을 수 있습니다.'
+            : '출처: itch.io 공개 RSS · 썸네일과 소개문의 저작권은 각 개발자에게 있습니다. 영문 소개는 자동 번역됩니다.'}
         </p>
       </section>
     </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase, isConfigured } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
 
-// 길드 게시판 — 공지사항 / 커뮤니티 / 학습 Q&A
+// 자유게시판 — 공지사항 / 커뮤니티 / 학습 Q&A
 // 인증·권한은 전부 Supabase(카카오 OAuth + RLS)가 담당
 
 const CATEGORIES = [
@@ -71,12 +71,12 @@ export default function Community() {
       {/* 헤더 영역 */}
       <section className="hero-soft border-b border-navy-100 dark:border-navy-700">
         <div className="container-x py-14 md:py-16">
-          <p className="font-pixel mb-2 text-sm text-royal dark:text-sky">GUILD BOARD</p>
+          <p className="font-pixel mb-2 text-sm text-royal dark:text-sky">FREE BOARD</p>
           <h1 className="text-3xl font-extrabold text-navy-900 dark:text-white md:text-4xl">
-            길드 게시판
+            자유게시판
           </h1>
           <p className="mt-3 text-navy-600 dark:text-navy-300">
-            공지 확인하고, 자유롭게 떠들고, 막히는 건 길드원에게 물어보세요.
+            공지 확인하고, 자유롭게 떠들고, 궁금한 건 다른 독자에게 물어보세요.
           </p>
         </div>
       </section>
@@ -97,7 +97,7 @@ export default function Community() {
                       🛡 {profile?.nickname || '...'}
                       {isAdmin && (
                         <em className="font-pixel ml-2 rounded border border-royal px-1.5 py-0.5 text-[10px] not-italic text-royal dark:border-sky dark:text-sky">
-                          GUILD MASTER
+                          ADMIN
                         </em>
                       )}
                     </span>
