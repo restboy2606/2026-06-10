@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './lib/auth'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
@@ -14,6 +15,7 @@ import { topics } from './data/site'
 
 export default function App() {
   return (
+    <AuthProvider>
     <div className="flex min-h-screen min-w-[320px] flex-col">
       <ScrollToTop />
       <Header />
@@ -60,5 +62,6 @@ export default function App() {
       <Footer />
       <ScrollToTopButton />
     </div>
+    </AuthProvider>
   )
 }

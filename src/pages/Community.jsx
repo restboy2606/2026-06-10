@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase, isConfigured } from '../lib/supabase'
+import { useAuth } from '../lib/auth'
 
 // 길드 게시판 — 공지사항 / 커뮤니티 / 학습 Q&A
 // 인증·권한은 전부 Supabase(카카오 OAuth + RLS)가 담당
@@ -18,29 +19,13 @@ const fmtDate = (iso) => {
 }
 
 export default function Community() {
-  const [session, setSession] = useState(null)
-  const [profile, setProfile] = useState(null)
+  const { session, profile, isAdmin, loginWithKakao, logout: authLogout } = useAuth()
   const [tab, setTab] = useState('community')
   const [posts, setPosts] = useState([])
   const [view, setView] = useState('list') // list | write | post
   const [current, setCurrent] = useState(null)
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState('')
-
-  const isAdmin = profile?.role === 'admin'
-
-  useEffect(() => {
-    if (!supabase) return
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
-    return () => sub.subscription.unsubscribe()
-  }, [])
-
-  useEffect(() => {
-    if (!supabase || !session) { setProfile(null); return }
-    supabase.from('pf_profiles').select('*').eq('id', session.user.id).single()
-      .then(({ data }) => setProfile(data))
-  }, [session])
 
   const loadPosts = useCallback(async (category) => {
     if (!supabase) { setLoading(false); return }
@@ -59,21 +44,13 @@ export default function Community() {
 
   useEffect(() => { loadPosts(tab) }, [tab, loadPosts])
 
-  async function login() {
+  function login() {
     setErr('')
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao',
-      options: {
-        redirectTo: window.location.href,
-        // 카카오 앱에 email 권한 없음(비즈 인증 필요) → 기본 스코프에서 account_email 제외
-        scopes: 'profile_nickname profile_image',
-      },
-    })
-    if (error) setErr(error.message)
+    loginWithKakao()
   }
 
   async function logout() {
-    await supabase.auth.signOut()
+    await authLogout()
     setView('list')
   }
 

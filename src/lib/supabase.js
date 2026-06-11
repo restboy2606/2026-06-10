@@ -8,5 +8,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 export const isConfigured = !SUPABASE_ANON_KEY.startsWith('PASTE_')
 
 export const supabase = isConfigured
-  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      // HashRouter(#/community)와 토큰 해시(#access_token=)가 충돌해서
+      // 쿼리 파라미터(?code=)로 돌아오는 PKCE 방식 사용
+      auth: { flowType: 'pkce' },
+    })
   : null

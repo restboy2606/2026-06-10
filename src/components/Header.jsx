@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { company, topics } from '../data/site'
 import ThemeToggle from './ThemeToggle'
+import { useAuth } from '../lib/auth'
+import { isConfigured } from '../lib/supabase'
 
 // 상단 네비게이션 구성 (영상 강의는 주제별 하위메뉴)
 const nav = [
@@ -15,6 +17,68 @@ const nav = [
   { label: '길드 게시판', to: '/community' },
   { label: '문의', to: '/contact' },
 ]
+
+// 우측 상단 로그인 영역 — 비로그인: 로그인 버튼(드롭다운), 로그인: 프사+닉네임+로그아웃
+function AuthBox() {
+  const { session, profile, isAdmin, loginWithKakao, logout } = useAuth()
+  const [open, setOpen] = useState(false)
+
+  if (!isConfigured) return null
+
+  if (!session) {
+    return (
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="rounded-lg bg-royal px-4 py-2 text-sm font-bold text-white transition hover:bg-royal/90"
+        >
+          로그인
+        </button>
+        {open && (
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+            <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-xl border border-navy-100 bg-white p-4 shadow-xl dark:border-navy-700 dark:bg-navy-800">
+              <p className="mb-3 text-center text-sm font-bold text-navy-800 dark:text-navy-100">
+                소셜 계정으로 로그인
+              </p>
+              <button
+                type="button"
+                onClick={() => { setOpen(false); loginWithKakao() }}
+                className="w-full rounded-lg bg-[#FEE500] px-4 py-2.5 text-sm font-extrabold text-[#191919] transition hover:opacity-85"
+              >
+                카카오로 시작하기
+              </button>
+              <p className="mt-2.5 text-center text-[11px] text-navy-400 dark:text-navy-500">
+                구글 로그인은 준비 중이에요
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  const avatar = session.user?.user_metadata?.avatar_url?.replace(/^http:/, 'https:')
+  return (
+    <div className="flex items-center gap-2">
+      {avatar && (
+        <img src={avatar} alt="" className="h-8 w-8 rounded-full border border-navy-100 dark:border-navy-700" />
+      )}
+      <span className="hidden items-center gap-1.5 text-sm font-bold text-navy-800 dark:text-navy-100 sm:flex">
+        {profile?.nickname || '...'}
+        {isAdmin && (
+          <em className="font-pixel rounded border border-royal px-1 py-0.5 text-[9px] not-italic text-royal dark:border-sky dark:text-sky">
+            GM
+          </em>
+        )}
+      </span>
+      <button type="button" onClick={logout} className="btn-ghost text-sm">
+        로그아웃
+      </button>
+    </div>
+  )
+}
 
 function Logo() {
   return (
@@ -65,8 +129,9 @@ export default function Header() {
             ))}
           </ul>
 
-          {/* 우측: 테마토글 + 햄버거 */}
+          {/* 우측: 로그인 + 테마토글 + 햄버거 */}
           <div className="flex items-center gap-2">
+            <AuthBox />
             <ThemeToggle />
             <button
               type="button"
