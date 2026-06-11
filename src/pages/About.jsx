@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { company, features, topics } from '../data/site'
+import { company, features, sections } from '../data/site'
 
 export default function About() {
   return (
@@ -19,7 +19,7 @@ export default function About() {
       <section className="container-x py-16 md:py-24">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-6 text-2xl font-extrabold text-navy-900 dark:text-white md:text-3xl">
-            우리는 이런 교육을 합니다
+            우리는 이런 데스크입니다
           </h2>
           <div className="space-y-4 text-base leading-8 text-navy-600 dark:text-navy-300 md:text-lg">
             {company.intro.map((p, i) => (
@@ -33,7 +33,7 @@ export default function About() {
       <section className="bg-navy-50 py-16 dark:bg-navy-900 md:py-24">
         <div className="container-x">
           <h2 className="mb-10 text-center text-2xl font-extrabold text-navy-900 dark:text-white md:text-3xl">
-            픽셀포지 아카데미의 약속
+            픽셀포지 프레스의 약속
           </h2>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((f) => (
@@ -47,24 +47,24 @@ export default function About() {
         </div>
       </section>
 
-      {/* 커리큘럼 요약 */}
+      {/* 섹션 안내 */}
       <section className="container-x py-16 md:py-24">
         <h2 className="mb-10 text-center text-2xl font-extrabold text-navy-900 dark:text-white md:text-3xl">
-          학습 주제
+          데스크 구성
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {topics.map((t, i) => (
+          {sections.map((s, i) => (
             <Link
-              key={t.key}
-              to={`/videos/${t.key}`}
+              key={s.to}
+              to={s.to}
               className="surface flex items-center gap-4 p-5 transition hover:-translate-y-1 hover:shadow-glow"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-royal/10 text-lg font-extrabold text-royal dark:bg-royal/20 dark:text-sky">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div>
-                <h3 className="font-bold text-navy-900 dark:text-white">{t.title}</h3>
-                <p className="text-sm text-navy-500 dark:text-navy-300">{t.headline}</p>
+                <h3 className="font-bold text-navy-900 dark:text-white">{s.label}</h3>
+                <p className="text-sm text-navy-500 dark:text-navy-300">{s.desc}</p>
               </div>
             </Link>
           ))}

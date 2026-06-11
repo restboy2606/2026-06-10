@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { company, topics } from '../data/site'
+import { company, sections } from '../data/site'
 
 // ============================================================
 // 푸터 (rest03 패턴) — 상단: 로고+소개문 / 하단: 다크 영역
@@ -52,16 +52,16 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* 영상 강의 */}
+            {/* 웹진 섹션 */}
             <div className="text-sm">
               <h4 className="mb-4 font-extrabold uppercase tracking-wider text-navy-100">
-                영상 강의
+                섹션
               </h4>
               <ul className="flex flex-col gap-2">
-                {topics.map((t) => (
-                  <li key={t.key}>
-                    <Link to={`/videos/${t.key}`} className="hover:text-sky">
-                      {t.title}
+                {sections.map((s) => (
+                  <li key={s.to}>
+                    <Link to={s.to} className="hover:text-sky">
+                      {s.label} <span className="text-navy-500">— {s.desc}</span>
                     </Link>
                   </li>
                 ))}

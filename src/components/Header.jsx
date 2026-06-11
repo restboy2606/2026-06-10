@@ -1,20 +1,15 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { company, topics } from '../data/site'
+import { company, sections } from '../data/site'
 import ThemeToggle from './ThemeToggle'
 import { useAuth } from '../lib/auth'
 import { isConfigured } from '../lib/supabase'
 
-// 상단 네비게이션 구성 (영상 강의는 주제별 하위메뉴)
+// 상단 네비게이션 — 웹진 섹션 (site.js sections 기반)
 const nav = [
   { label: '홈', to: '/' },
-  {
-    label: '영상 강의',
-    to: `/videos/${topics[0].key}`,
-    children: topics.map((t) => ({ label: t.label, to: `/videos/${t.key}` })),
-  },
+  ...sections.map((s) => ({ label: s.label, to: s.to })),
   { label: '회사소개', to: '/about' },
-  { label: '길드 게시판', to: '/community' },
   { label: '문의', to: '/contact' },
 ]
 
@@ -239,26 +234,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 데스크탑 드롭다운 (영상 강의 주제) */}
-        <div
-          className={[
-            'hidden overflow-hidden border-t border-navy-100 bg-white transition-all duration-200 dark:border-navy-700 dark:bg-navy-900 lg:block',
-            hovered === '영상 강의' ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0',
-          ].join(' ')}
-          onMouseEnter={() => setHovered('영상 강의')}
-        >
-          <div className="container-x flex flex-wrap gap-2 py-5">
-            {topics.map((t) => (
-              <Link
-                key={t.key}
-                to={`/videos/${t.key}`}
-                className="rounded-full bg-navy-50 px-4 py-2 text-sm font-bold text-navy-700 transition hover:bg-royal hover:text-white dark:bg-navy-800 dark:text-navy-100 dark:hover:bg-royal"
-              >
-                {t.label}
-              </Link>
-            ))}
-          </div>
-        </div>
       </nav>
 
       {/* 모바일 패널 */}

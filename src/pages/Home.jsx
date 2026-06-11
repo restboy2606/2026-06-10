@@ -1,93 +1,85 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { company, features, topics, videos, featured } from '../data/site'
-import VideoCard from '../components/VideoCard'
-import VideoModal from '../components/VideoModal'
+import { company, features } from '../data/site'
+import { articles } from '../data/articles'
+import news from '../data/news.json'
 
-// 주제 accent → 정적 Tailwind 클래스 (동적 클래스는 purge 되므로 매핑 사용)
-const accentChip = {
-  royal: 'bg-royal/15 text-royal',
-  sky: 'bg-sky/20 text-sky-700 dark:text-sky',
-  mint: 'bg-mint/20 text-mint-500',
-  amber: 'bg-amber/20 text-amber-600',
-}
+// PIXELFORGE PRESS 프론트 페이지 — 웹진 1면
 
-// featured 정의에서 실제 영상 객체 찾기
-function resolveFeatured() {
-  return featured
-    .map((f) => {
-      const v = (videos[f.topic] || []).find((x) => x.id === f.videoId)
-      return v ? { ...v, topic: f.topic } : null
-    })
-    .filter(Boolean)
+const catChip = {
+  데브로그: 'bg-royal/15 text-royal',
+  비하인드: 'bg-amber/20 text-amber-600',
+  칼럼: 'bg-mint/20 text-mint-500',
 }
 
 export default function Home() {
-  const [active, setActive] = useState(null)
-  const featuredVideos = resolveFeatured()
+  const headline = articles[0]
+  const subArticles = articles.slice(1)
+  const freshGames = (news.newest || []).slice(0, 6)
 
   return (
     <div>
-      {/* 히어로 */}
+      {/* 히어로 — 1면 헤드라인 */}
       <section className="hero-gradient relative overflow-hidden text-white">
         <div className="container-x grid items-center gap-10 py-20 md:py-28 lg:grid-cols-2">
           <div className="animate-fadeUp">
-            <p className="eyebrow !bg-white/15 !text-sky">PIXEL × AI LEARNING</p>
+            <p className="eyebrow !bg-white/15 !text-sky">2D PIXEL GAMES WEBZINE</p>
             <h1 className="mt-5 text-4xl font-extrabold leading-tight md:text-6xl">
-              게임처럼 배우는
+              도트 한 점까지
               <br />
-              AI 한 판
+              전부 기사가 된다
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-100">
-              {company.tagline}. 기초부터 실무, AI 리터러시까지 — 검증된 동영상 강의로 지금 시작하세요.
+              {company.tagline}. 매일 갱신되는 신작 데스크부터 개발 현장의 데브로그까지.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to={`/videos/${topics[0].key}`} className="btn-primary">
-                영상 강의 보기 ▶
+              <Link to="/news" className="btn-primary">
+                신작 데스크 보기 🗞️
               </Link>
               <Link
-                to="/about"
+                to="/articles"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-6 py-3 font-bold text-white transition hover:bg-white/10"
               >
-                회사소개
+                에디토리얼
               </Link>
             </div>
             <div className="mt-10 flex gap-8 text-sm">
               <div>
-                <div className="font-pixel text-3xl font-extrabold text-amber">5+</div>
-                <div className="text-navy-200">학습 주제</div>
-              </div>
-              <div>
                 <div className="font-pixel text-3xl font-extrabold text-amber">
-                  {Object.values(videos).reduce((a, b) => a + b.length, 0)}+
+                  {(news.newest || []).length + (news.top || []).length}
                 </div>
-                <div className="text-navy-200">동영상 강의</div>
+                <div className="text-navy-200">오늘의 수집 기사</div>
               </div>
               <div>
-                <div className="font-pixel text-3xl font-extrabold text-amber">24/7</div>
-                <div className="text-navy-200">언제든 시청</div>
+                <div className="font-pixel text-3xl font-extrabold text-amber">{articles.length}</div>
+                <div className="text-navy-200">에디토리얼</div>
+              </div>
+              <div>
+                <div className="font-pixel text-3xl font-extrabold text-amber">DAILY</div>
+                <div className="text-navy-200">자동 갱신</div>
               </div>
             </div>
           </div>
 
-          {/* 히어로 비주얼 카드 */}
-          <div className="relative hidden lg:block">
-            <div className="surface !bg-white/10 !border-white/20 animate-pop p-6 backdrop-blur">
-              <div className="hero-gradient mb-4 flex aspect-video items-center justify-center rounded-xl border border-white/10">
-                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-3xl text-royal">
-                  ▶
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="h-3 w-3/4 rounded bg-white/30" />
-                <div className="h-3 w-1/2 rounded bg-white/20" />
-              </div>
+          {/* 헤드라인 기사 카드 */}
+          {headline && (
+            <div className="relative hidden lg:block">
+              <Link
+                to={`/articles/${headline.slug}`}
+                className="surface !bg-white/10 !border-white/20 animate-pop block p-7 backdrop-blur transition hover:!bg-white/15"
+              >
+                <p className="font-pixel mb-3 text-xs text-amber">TODAY'S HEADLINE</p>
+                <h2 className="text-2xl font-extrabold leading-snug text-white">
+                  {headline.emoji} {headline.title}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-navy-100">{headline.excerpt}</p>
+                <span className="mt-5 inline-block text-sm font-bold text-sky">기사 읽기 →</span>
+              </Link>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* 특징 */}
+      {/* 데스크 소개 */}
       <section className="container-x py-16 md:py-24">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (
@@ -100,77 +92,107 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 주제별 둘러보기 */}
-      <section className="bg-navy-50 py-16 dark:bg-navy-900 md:py-24">
-        <div className="container-x">
-          <div className="mb-10 text-center">
-            <p className="eyebrow">CURRICULUM</p>
-            <h2 className="mt-3 text-3xl font-extrabold text-navy-900 dark:text-white md:text-4xl">
-              주제별로 만나는 강의
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {topics.map((t) => (
+      {/* 신작 데스크 미리보기 */}
+      {freshGames.length > 0 && (
+        <section className="bg-navy-50 py-16 dark:bg-navy-900 md:py-24">
+          <div className="container-x">
+            <div className="mb-10 flex items-end justify-between">
+              <div>
+                <p className="eyebrow">NEWS DESK</p>
+                <h2 className="mt-3 text-3xl font-extrabold text-navy-900 dark:text-white md:text-4xl">
+                  방금 들어온 픽셀 신작
+                </h2>
+              </div>
               <Link
-                key={t.key}
-                to={`/videos/${t.key}`}
-                className="surface group flex flex-col p-8 transition hover:-translate-y-1 hover:shadow-glow"
+                to="/news"
+                className="hidden text-sm font-bold text-royal hover:underline dark:text-sky sm:block"
               >
-                <span className={`chip mb-4 w-fit ${accentChip[t.accent] || accentChip.royal}`}>
-                  {(videos[t.key] || []).length}개 강의
-                </span>
-                <h3 className="mb-2 text-xl font-bold text-navy-900 dark:text-white">{t.title}</h3>
-                <p className="flex-1 text-sm leading-relaxed text-navy-500 dark:text-navy-300">
-                  {t.desc}
-                </p>
-                <span className="mt-5 text-sm font-bold text-royal transition group-hover:gap-2 dark:text-sky">
-                  강의 보러가기 →
-                </span>
+                전체보기 →
               </Link>
-            ))}
+            </div>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+              {freshGames.map((g) => (
+                <a
+                  key={g.link}
+                  href={g.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="surface group overflow-hidden transition hover:-translate-y-1"
+                >
+                  {g.image && (
+                    <div className="aspect-[315/250] overflow-hidden bg-navy-100 dark:bg-navy-800">
+                      <img
+                        src={g.image}
+                        alt={g.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                        style={{ imageRendering: 'pixelated' }}
+                      />
+                    </div>
+                  )}
+                  <p className="truncate p-3 text-xs font-bold text-navy-800 dark:text-navy-100">
+                    {g.title}
+                  </p>
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* 추천 영상 */}
-      {featuredVideos.length > 0 && (
+      {/* 에디토리얼 */}
+      {subArticles.length > 0 && (
         <section className="container-x py-16 md:py-24">
           <div className="mb-10 flex items-end justify-between">
             <div>
-              <p className="eyebrow">PICK</p>
+              <p className="eyebrow">EDITORIAL</p>
               <h2 className="mt-3 text-3xl font-extrabold text-navy-900 dark:text-white md:text-4xl">
-                추천 영상
+                데스크의 기사
               </h2>
             </div>
             <Link
-              to={`/videos/${topics[0].key}`}
+              to="/articles"
               className="hidden text-sm font-bold text-royal hover:underline dark:text-sky sm:block"
             >
               전체보기 →
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredVideos.map((v) => (
-              <VideoCard key={v.id} video={v} onPlay={setActive} />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {subArticles.map((a) => (
+              <Link
+                key={a.slug}
+                to={`/articles/${a.slug}`}
+                className="surface group flex flex-col p-7 transition hover:-translate-y-1 hover:shadow-glow"
+              >
+                <span className={`chip mb-4 w-fit ${catChip[a.category] || 'bg-royal/15 text-royal'}`}>
+                  {a.category}
+                </span>
+                <h3 className="mb-2 text-xl font-bold leading-snug text-navy-900 group-hover:text-royal dark:text-white dark:group-hover:text-sky">
+                  {a.emoji} {a.title}
+                </h3>
+                <p className="flex-1 text-sm leading-relaxed text-navy-500 dark:text-navy-300">
+                  {a.excerpt}
+                </p>
+                <span className="mt-5 text-sm font-bold text-royal dark:text-sky">기사 읽기 →</span>
+              </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* CTA 배너 */}
+      {/* CTA — 길드 가입 */}
       <section className="container-x pb-20">
         <div className="hero-gradient flex flex-col items-center gap-5 rounded-3xl px-6 py-14 text-center text-white">
-          <h2 className="text-2xl font-extrabold md:text-3xl">지금, 첫 판을 시작하세요</h2>
+          <h2 className="text-2xl font-extrabold md:text-3xl">길드에 합류하세요</h2>
           <p className="max-w-xl text-navy-100">
-            모바일에서도 끊김 없이, 라이트·다크 모드로 편안하게. 픽셀포지 아카데미와 함께 한 판씩 깨다 보면 누구나 AI에 한 걸음 가까워집니다.
+            회원이 되면 기사에 반응과 댓글을 남기고, 길드 게시판에서 제보·토론에 참여할 수 있습니다.
+            카카오 로그인으로 3초면 충분해요.
           </p>
-          <Link to={`/videos/${topics[0].key}`} className="btn-primary !bg-amber !text-navy-900 hover:!bg-amber-300">
-            무료로 강의 둘러보기
+          <Link to="/community" className="btn-primary !bg-amber !text-navy-900 hover:!bg-amber-300">
+            길드 게시판 가기 ⚔️
           </Link>
         </div>
       </section>
-
-      <VideoModal video={active} onClose={() => setActive(null)} />
     </div>
   )
 }

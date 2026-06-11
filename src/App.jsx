@@ -6,12 +6,13 @@ import ScrollToTop from './components/ScrollToTop'
 import ScrollToTopButton from './components/ScrollToTopButton'
 
 import Home from './pages/Home'
-import Videos from './pages/Videos'
+import News from './pages/News'
+import Articles from './pages/Articles'
+import ArticleView from './pages/ArticleView'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Community from './pages/Community'
 import SimplePage from './pages/SimplePage'
-import { topics } from './data/site'
 
 export default function App() {
   return (
@@ -23,9 +24,12 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          {/* 영상 강의 — :topic 으로 주제 전환 */}
-          <Route path="/videos" element={<Navigate to={`/videos/${topics[0].key}`} replace />} />
-          <Route path="/videos/:topic" element={<Videos />} />
+          {/* 웹진 — 신작 데스크(자동 수집) + 에디토리얼(직접 작성) */}
+          <Route path="/news" element={<News />} />
+          <Route path="/articles" element={<Articles />} />
+          <Route path="/articles/:slug" element={<ArticleView />} />
+          {/* 구 영상 강의 경로 → 신작 데스크로 */}
+          <Route path="/videos/*" element={<Navigate to="/news" replace />} />
 
           <Route path="/about" element={<About />} />
           <Route path="/community" element={<Community />} />
@@ -37,8 +41,8 @@ export default function App() {
               <SimplePage
                 title="이용약관"
                 body={[
-                  '본 약관은 픽셀포지 아카데미(이하 "회사")가 제공하는 온라인 동영상 교육 서비스의 이용 조건과 절차를 규정합니다.',
-                  '회사가 제공하는 모든 동영상 콘텐츠의 저작권은 회사 또는 정당한 권리자에게 있으며, 무단 복제·배포·전송을 금합니다.',
+                  '본 약관은 픽셀포지 프레스(이하 "회사")가 제공하는 게임 웹진 서비스의 이용 조건과 절차를 규정합니다.',
+                  '회사가 직접 작성한 기사의 저작권은 회사에 있으며, 신작 데스크에 소개되는 게임의 썸네일·소개문의 저작권은 각 개발자에게 있습니다.',
                 ]}
               />
             }
