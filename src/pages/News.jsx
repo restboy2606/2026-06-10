@@ -71,7 +71,7 @@ export default function News() {
                 rel="noreferrer"
                 className="surface group flex flex-col overflow-hidden transition hover:-translate-y-1 hover:shadow-glow"
               >
-                {g.image && (
+                {g.image ? (
                   <div className={`${isNewsTab ? 'aspect-video' : 'aspect-[315/250]'} overflow-hidden bg-navy-100 dark:bg-navy-800`}>
                     <img
                       src={g.image}
@@ -81,6 +81,14 @@ export default function News() {
                       style={isNewsTab ? undefined : { imageRendering: 'pixelated' }}
                     />
                   </div>
+                ) : (
+                  isNewsTab && (
+                    <div className="hero-gradient flex aspect-[5/1.6] items-center justify-center">
+                      <span className="font-pixel text-sm tracking-widest text-white/80">
+                        PIXEL NEWS 🗞️
+                      </span>
+                    </div>
+                  )
                 )}
                 <div className="flex flex-1 flex-col p-5">
                   <div className="mb-2 flex items-center justify-between gap-2">

@@ -78,53 +78,52 @@ async function fetchItch(url, limit = 12) {
   return games
 }
 
-// ── 한국 게임 뉴스 (루리웹 + 게임메카) ─────────────────────
-async function fetchGameNews(limit = 14) {
-  const sources = [
-    {
-      name: '루리웹',
-      url: 'https://bbs.ruliweb.com/news/rss',
-      image: (it) => {
-        const m = pick(it, 'description').match(/src="(\/\/[^"]+|https?:[^"]+)"/)
-        return m ? (m[1].startsWith('//') ? 'https:' + m[1] : m[1]) : ''
-      },
-    },
-    {
-      name: '게임메카',
-      url: 'https://www.gamemeca.com/rss.php',
-      image: (it) => pick(it, 'url'), // <image><url>…</url></image>
-    },
-  ]
+// ── 2D 픽셀·도트 게임 뉴스 (구글 뉴스 검색 RSS) ────────────
+// 키워드 검색이라 일반 매체 RSS보다 픽셀 관련 기사만 정확히 모임.
+async function fetchGameNews(limit = 24) {
+  const queries = ['픽셀 게임', '도트 게임', '픽셀아트 인디게임', '레트로 인디게임']
+  const gnews = (q) =>
+    `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=ko&gl=KR&ceid=KR:ko`
 
   const all = []
-  for (const s of sources) {
+  const seen = new Set()
+  for (const q of queries) {
     try {
-      const res = await fetch(s.url, UA)
+      const res = await fetch(gnews(q), UA)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const xml = await res.text()
-      for (const it of items(xml).slice(0, limit)) {
-        const title = decodeEntities(pick(it, 'title'))
+      for (const it of items(xml)) {
+        // 제목 끝의 " - 매체명"은 분리해서 출처 배지로
+        const rawTitle = decodeEntities(pick(it, 'title'))
+        const srcTag = decodeEntities(pick(it, 'source'))
+        const title = srcTag && rawTitle.endsWith(` - ${srcTag}`)
+          ? rawTitle.slice(0, -(srcTag.length + 3))
+          : rawTitle
         const link = pick(it, 'link')
         if (!title || !link) continue
+        // 중복 제거 (쿼리 간 겹침)
+        const key = title.replace(/\s+/g, '').slice(0, 40)
+        if (seen.has(key)) continue
+        // 노이즈 컷: 회사명 매칭(엔픽셀·픽셀베리 등)만 있고 도트 게임 얘기가 아닌 기사
+        if (!/(?<![가-힣A-Za-z])(픽셀|도트|레트로)|픽셀\s?아트|2D/i.test(title)) continue
+        if (/엔픽셀|픽셀베리|하이픽셀/.test(title) && !/도트|픽셀\s?아트|레트로/.test(title)) continue
+        seen.add(key)
         all.push({
-          source: s.name,
+          source: srcTag || '구글 뉴스',
           title,
           link,
-          image: s.image(it),
-          desc: stripHtml(pick(it, 'description')).slice(0, 150),
+          image: '', // 구글뉴스 RSS는 썸네일 미제공
+          desc: '',
           pubDate: pick(it, 'pubDate'),
         })
       }
-      console.log(`${s.name}: 수집 OK`)
+      console.log(`구글뉴스 "${q}": 수집 OK (누적 ${all.length})`)
     } catch (e) {
-      console.log(`${s.name} 실패(건너뜀): ${e.message}`)
+      console.log(`구글뉴스 "${q}" 실패(건너뜀): ${e.message}`)
     }
   }
-  // 최신순 정렬 후 픽셀·인디 키워드 기사를 살짝 앞으로
   all.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-  const boost = (n) => (/픽셀|도트|인디|레트로/i.test(n.title + n.desc) ? 0 : 1)
-  all.sort((a, b) => boost(a) - boost(b) || new Date(b.pubDate) - new Date(a.pubDate))
-  return all.slice(0, limit * 2)
+  return all.slice(0, limit)
 }
 
 // ── main ───────────────────────────────────────────────────
