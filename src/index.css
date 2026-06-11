@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white font-sans text-navy-900 antialiased transition-colors duration-300;
+  }
+  /* 다크모드 기본 배경/타이포 */
+  .dark body {
+    @apply bg-navy-950 text-navy-50;
+  }
+  /* 모바일에서 가로 스크롤 방지 */
+  body {
+    @apply overflow-x-hidden;
+  }
+}
+
+@layer components {
+  /* 섹션 공통 좌우 여백 (rest03 기준 — 넉넉한 여백) */
+  .section-x {
+    @apply px-4 md:px-10 lg:px-24 xl:px-40;
+  }
+
+  /* 컨테이너 */
+  .container-x {
+    @apply mx-auto w-full max-w-container section-x;
+  }
+
+  /* 1차 CTA 버튼 (로열블루) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-royal px-6 py-3 font-bold text-white shadow-glow transition hover:bg-royal-600 active:scale-95;
+  }
+
+  /* 2차 버튼 (아웃라인) */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-navy-200 px-6 py-3 font-bold text-navy-800 transition hover:border-royal hover:text-royal dark:border-navy-600 dark:text-navy-100 dark:hover:border-sky dark:hover:text-sky;
+  }
+
+  /* 표면 카드 (라이트/다크 대응) */
+  .surface {
+    @apply rounded-2xl border border-navy-100 bg-white shadow-card transition-colors dark:border-navy-700 dark:bg-navy-800;
+  }
+
+  /* 태그/뱃지 */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold;
+  }
+
+  /* 섹션 제목 위 작은 라벨 (픽셀 폰트 — 영문 라벨용) */
+  .eyebrow {
+    @apply inline-block rounded-md bg-royal/10 px-3 py-1 font-pixel text-sm font-extrabold uppercase tracking-widest text-royal dark:bg-royal/20 dark:text-sky;
+  }
+}
+
+/* ── 픽셀 감성 유틸 ── */
+.font-pixel {
+  font-family: 'Mona', 'Pretendard', monospace;
+}
+/* 레트로 계단식 그림자(픽셀 카드/배지) */
+.pixel-shadow {
+  box-shadow: 4px 4px 0 0 rgba(11, 26, 51, 0.22);
+}
+.dark .pixel-shadow {
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.5);
+}
+.pixel-border {
+  border: 2px solid rgba(43, 91, 255, 0.55);
+}
+/* 유튜브 썸네일은 선명하게, 도트 장식은 픽셀 그대로 */
+.pixelated {
+  image-rendering: pixelated;
+}
+
+/* 히어로 그라데이션 배경 (홈 메인용 — 진한 네이비) */
+.hero-gradient {
+  background:
+    radial-gradient(ellipse at top left, rgba(43, 91, 255, 0.35), transparent 55%),
+    radial-gradient(ellipse at bottom right, rgba(56, 189, 248, 0.28), transparent 55%),
+    linear-gradient(135deg, #0b1a33 0%, #172a82 100%);
+}
+
+/* 서브페이지 헤더용 — 밝고 시원한 라이트 그라데이션 */
+.hero-soft {
+  background:
+    radial-gradient(ellipse at top right, rgba(56, 189, 248, 0.22), transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(43, 91, 255, 0.12), transparent 55%),
+    linear-gradient(135deg, #f5f8ff 0%, #eef3ff 100%);
+}
+.dark .hero-soft {
+  background:
+    radial-gradient(ellipse at top right, rgba(56, 189, 248, 0.16), transparent 60%),
+    linear-gradient(135deg, #0f1c38 0%, #0b1a33 100%);
+}
+
+/* 스크롤바 (영상 메뉴 가로 스크롤용) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
